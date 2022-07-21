@@ -1,7 +1,6 @@
 package org.winble.moray.foo;
 
-import statemachine.IState;
-
+import org.winble.moray.IState;
 /**
  * @author bowenzhang
  * Create on 2022/7/20

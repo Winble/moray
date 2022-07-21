@@ -30,7 +30,7 @@ public abstract class AbstractStateMachineFactory<C, S extends IState, E extends
         return stateMachine;
     }
 
-    protected ITransition<C, S, E> matchTransition(IState state, IEvent event) {
+    public ITransition<C, S, E> matchTransition(IState state, IEvent event) {
         Pair<IState, String> key = Pair.from(state, event.name());
         if (transactions.containsKey(key)) {
             return transactions.get(key);

@@ -1,6 +1,6 @@
 package org.winble.moray.foo;
 
-import statemachine.*;
+import org.winble.moray.IEvent;
 
 /**
  * @author bowenzhang

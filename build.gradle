@@ -20,3 +20,7 @@ repositories {
     mavenCentral()
     mavenLocal()
 }
+
+dependencies {
+    implementation 'org.unidal.framework:foundation-service:4.1.1'
+}

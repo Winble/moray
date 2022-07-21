@@ -1,7 +1,7 @@
 package org.winble.moray.foo;
 
-import statemachine.ITransition;
-import statemachine.StateMachine;
+import org.winble.moray.ITransition;
+import org.winble.moray.StateMachine;
 
 import java.util.function.BiFunction;
 

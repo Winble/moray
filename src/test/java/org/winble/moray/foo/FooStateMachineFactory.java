@@ -1,6 +1,8 @@
 package org.winble.moray.foo;
 
-import statemachine.*;
+import org.winble.moray.AbstractStateMachineFactory;
+import org.winble.moray.AbstractTransition;
+import org.winble.moray.StateMachine;
 
 import java.text.MessageFormat;
 

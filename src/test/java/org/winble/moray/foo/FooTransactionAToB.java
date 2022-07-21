@@ -1,6 +1,6 @@
 package org.winble.moray.foo;
 
-import statemachine.AbstractTransition;
+import org.winble.moray.AbstractTransition;
 
 /**
  * @author bowenzhang
