@@ -10,7 +10,7 @@ import org.winble.moray.domain.ITransition;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public abstract class AbstractTransition<C, S extends IState, E extends IEvent> implements ITransition<C, S, E> {
+public abstract class AbstractTransition<C, S extends IState, E extends IEvent, M extends IStateMachine<C, S, E, ?>> implements ITransition<C, S, E> {
 
     private final S from;
 
@@ -49,8 +49,7 @@ public abstract class AbstractTransition<C, S extends IState, E extends IEvent> 
     public void action(IStateMachine<C, S, E, ?> stateMachine, E event) {
         try (AutoCloseable ignored = tryAction(stateMachine, event)) {
             C context = this.doAction(stateMachine.getContext(), event);
-            stateMachine.setContext(context);
-            stateMachine.transit(this.from, this.to);
+            stateMachine.transit(this.from, this.to, context);
         } catch (StateTransitionException e) {
             throw e;
         } catch (Exception e) {

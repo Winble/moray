@@ -16,9 +16,7 @@ public interface IStateMachine<C, S extends IState, E extends IEvent, R extends 
 
     C getContext();
 
-    void setContext(C context);
-
     S getState();
 
-    void transit(S from, S to);
+    void transit(S from, S to, C context);
 }

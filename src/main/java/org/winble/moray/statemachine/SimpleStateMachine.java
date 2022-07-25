@@ -1,9 +1,7 @@
 package org.winble.moray.statemachine;
 
+import org.winble.moray.domain.*;
 import org.winble.moray.result.BaseResult;
-import org.winble.moray.domain.IEvent;
-import org.winble.moray.domain.IState;
-import org.winble.moray.domain.ITransition;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -16,22 +14,12 @@ import java.util.function.Supplier;
 public class SimpleStateMachine<C, S extends IState, E extends IEvent> extends AbstractStateMachine<C, S, E, BaseResult> {
 
 
-    public SimpleStateMachine(C context, S state, BiFunction<S, E, ITransition<C, S, E>> transitionSupplier) {
-        super(context, state, transitionSupplier);
+    public SimpleStateMachine(C context, S state, IStateMachineFactory<C, S, E, BaseResult> factory) {
+        super(context, state, factory);
     }
 
-    public SimpleStateMachine(C context, S state, BiFunction<S, E, ITransition<C, S, E>> transitionSupplier, Supplier<Function<Exception, BaseResult>> errorHandler) {
-        super(context, state, transitionSupplier, errorHandler);
-    }
-
-    @Override
-    public BaseResult fire(E event) {
-        try {
-            transitionSupplier.apply(state, event).action(this, event);
-            return BaseResult.success();
-        } catch (Exception e) {
-            return errorHandler.get().apply(e);
-        }
+    public SimpleStateMachine(C context, S state, IStateMachineFactory<C, S, E, BaseResult> factory, Supplier<Function<Exception, BaseResult>> errorHandler) {
+        super(context, state, factory, errorHandler);
     }
 
     @Override

@@ -11,11 +11,11 @@ import java.util.Map;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public abstract class AbstractStateMachineFactory<C, S extends IState, E extends IEvent, M extends IStateMachine<C, S, E, ?>> implements IStateMachineFactory<C, S, E, M> {
+public abstract class AbstractStateMachineFactory<C, S extends IState, E extends IEvent, R extends IResult> implements IStateMachineFactory<C, S, E, R> {
 
-    Map<String, M> registry = new HashMap<>();
+    Map<String, IStateMachine<C, S, E, R>> registry = new HashMap<>();
 
-    Map<Pair<S, String>, ITransition<C, S, E>> transactions = new HashMap<>();
+    Map<Pair<IState, String>, ITransition<C, S, E>> transactions = new HashMap<>();
 
     @Override
     public void load(ITransition<C, S, E> transition) {
@@ -23,15 +23,16 @@ public abstract class AbstractStateMachineFactory<C, S extends IState, E extends
     }
 
     @Override
-    public M get(String id) {
+    public IStateMachine<C, S, E, R> get(String id) {
         if (registry.containsKey(id)) {
             return registry.get(id);
         }
-        M stateMachine = this.buildStateMachine(id);
+        IStateMachine<C, S, E, R> stateMachine = this.buildStateMachine(id);
         registry.put(id, stateMachine);
         return stateMachine;
     }
 
+    @Override
     public ITransition<C, S, E> matchTransition(IState state, IEvent event) {
         Pair<IState, String> key = Pair.from(state, event.name());
         if (transactions.containsKey(key)) {
@@ -40,5 +41,5 @@ public abstract class AbstractStateMachineFactory<C, S extends IState, E extends
         throw new StateTransitionException(500, "no match transaction");
     }
 
-    protected abstract M buildStateMachine(String id);
+    protected abstract IStateMachine<C, S, E, R> buildStateMachine(String id);
 }

@@ -16,28 +16,28 @@ public abstract class AbstractStateMachine<C, S extends IState, E extends IEvent
 
     protected C context;
 
-    protected final BiFunction<S, E, ITransition<C, S, E>> transitionSupplier;
-
     protected final Supplier<Function<Exception, R>> errorHandler;
 
-    public AbstractStateMachine(C context, S state, BiFunction<S, E, ITransition<C, S, E>> transitionSupplier) {
+    protected final IStateMachineFactory<C, S, E, R> factory;
+
+    public AbstractStateMachine(C context, S state, IStateMachineFactory<C, S, E, R> factory) {
         this.context = context;
         this.state = state;
-        this.transitionSupplier = transitionSupplier;
+        this.factory  = factory;
         this.errorHandler = () -> this::onError;
     }
 
-    public AbstractStateMachine(C context, S state, BiFunction<S, E, ITransition<C, S, E>> transitionSupplier, Supplier<Function<Exception, R>> errorHandler) {
+    public AbstractStateMachine(C context, S state, IStateMachineFactory<C, S, E, R> factory, Supplier<Function<Exception, R>> errorHandler) {
         this.context = context;
         this.state = state;
-        this.transitionSupplier = transitionSupplier;
+        this.factory = factory;
         this.errorHandler = errorHandler;
     }
 
     @Override
     public R fire(E event) {
         try {
-            transitionSupplier.apply(state, event).action(this, event);
+            factory.matchTransition(state, event).action(this, event);
             return this.onSuccess(event);
         } catch (Exception e) {
             return errorHandler.get().apply(e);
@@ -54,17 +54,13 @@ public abstract class AbstractStateMachine<C, S extends IState, E extends IEvent
     }
 
     @Override
-    public void setContext(C context) {
-        this.context = context;
-    }
-
-    @Override
     public S getState() {
         return this.state;
     }
 
     @Override
-    public void transit(S from, S to) {
+    public void transit(S from, S to, C context) {
         this.state = to;
+        this.context = context;
     }
 }

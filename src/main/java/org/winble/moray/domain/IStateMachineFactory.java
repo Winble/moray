@@ -1,16 +1,17 @@
 package org.winble.moray.domain;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public interface IStateMachineFactory<C, S extends IState, E extends IEvent, M extends IStateMachine<C, S, E, ?>> {
+public interface IStateMachineFactory<C, S extends IState, E extends IEvent, R extends IResult> {
 
     void load(ITransition<C, S, E> transition);
 
-    default void load(List<ITransition<C, S, E>> transitions) {
+    default void load(Collection<ITransition<C, S, E>> transitions) {
         transitions.forEach(this::load);
     }
 
@@ -20,5 +21,7 @@ public interface IStateMachineFactory<C, S extends IState, E extends IEvent, M e
         }
     }
 
-    M get(String id);
+    IStateMachine<C, S, E, R> get(String id);
+
+    ITransition<C, S, E> matchTransition(IState from, IEvent event);
 }
