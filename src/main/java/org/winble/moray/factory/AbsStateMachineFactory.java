@@ -11,7 +11,7 @@ import java.util.Map;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public abstract class AbstractStateMachineFactory<C, S extends IState, E extends IEvent, R extends IResult> implements IStateMachineFactory<C, S, E, R> {
+public abstract class AbsStateMachineFactory<C, S extends IState, E extends IEvent, R extends IResult> implements IStateMachineFactory<C, S, E, R> {
 
     Map<String, IStateMachine<C, S, E, R>> registry = new HashMap<>();
 

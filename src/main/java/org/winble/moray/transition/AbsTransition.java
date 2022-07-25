@@ -10,7 +10,7 @@ import org.winble.moray.domain.ITransition;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public abstract class AbstractTransition<C, S extends IState, E extends IEvent, M extends IStateMachine<C, S, E, ?>> implements ITransition<C, S, E> {
+public abstract class AbsTransition<C, S extends IState, E extends IEvent> implements ITransition<C, S, E> {
 
     private final S from;
 
@@ -18,13 +18,7 @@ public abstract class AbstractTransition<C, S extends IState, E extends IEvent, 
 
     private final E on;
 
-    protected AbstractTransition(S from, E on) {
-        this.from = from;
-        this.to = from;
-        this.on = on;
-    }
-
-    protected AbstractTransition(S from, S to, E on) {
+    protected AbsTransition(S from, S to, E on) {
         this.from = from;
         this.to = to;
         this.on = on;
@@ -47,6 +41,9 @@ public abstract class AbstractTransition<C, S extends IState, E extends IEvent, 
 
     @Override
     public void action(IStateMachine<C, S, E, ?> stateMachine, E event) {
+        if (!this.preCondition(stateMachine, event)) {
+            return;
+        }
         try (AutoCloseable ignored = tryAction(stateMachine, event)) {
             C context = this.doAction(stateMachine.getContext(), event);
             stateMachine.transit(this.from, this.to, context);
@@ -57,13 +54,17 @@ public abstract class AbstractTransition<C, S extends IState, E extends IEvent, 
         }
     }
 
-    protected AutoCloseable tryAction(IStateMachine<C, S, E, ?> stateMachine, E event) throws Exception {
+    protected boolean preCondition(IStateMachine<C, S, E, ?> stateMachine, E event) {
         if (!this.from.equals(stateMachine.getState())) {
             throw new StateTransitionException(500, "illegal transition");
         }
         if (!this.on.name().equals(event.name())) {
             throw new StateTransitionException(501, "invalid event type");
         }
+        return true;
+    }
+
+    protected AutoCloseable tryAction(IStateMachine<C, S, E, ?> stateMachine, E event) throws Exception {
         return () -> {};
     }
 
