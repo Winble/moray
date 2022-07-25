@@ -22,5 +22,5 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.unidal.framework:foundation-service:4.1.1'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 }

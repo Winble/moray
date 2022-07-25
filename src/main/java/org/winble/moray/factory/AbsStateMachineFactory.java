@@ -1,6 +1,6 @@
 package org.winble.moray.factory;
 
-import org.unidal.tuple.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.winble.moray.type.StateTransitionException;
 import org.winble.moray.domain.*;
 
@@ -19,7 +19,7 @@ public abstract class AbsStateMachineFactory<C, S extends IState, E extends IEve
 
     @Override
     public void load(ITransition<C, S, E> transition) {
-        transactions.put(Pair.from(transition.from(), transition.on().name()), transition);
+        transactions.put(Pair.of(transition.from(), transition.on().name()), transition);
     }
 
     @Override
@@ -34,7 +34,7 @@ public abstract class AbsStateMachineFactory<C, S extends IState, E extends IEve
 
     @Override
     public ITransition<C, S, E> matchTransition(IState state, IEvent event) {
-        Pair<IState, String> key = Pair.from(state, event.name());
+        Pair<IState, String> key = Pair.of(state, event.name());
         if (transactions.containsKey(key)) {
             return transactions.get(key);
         }
