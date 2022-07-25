@@ -5,5 +5,7 @@ package org.winble.moray.domain;
  * Create on 2022/7/20
  */
 public interface IEvent {
-    String name();
+    default String name() {
+        return this.getClass().getSimpleName();
+    }
 }
