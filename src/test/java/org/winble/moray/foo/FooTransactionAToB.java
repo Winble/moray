@@ -1,6 +1,6 @@
 package org.winble.moray.foo;
 
-import org.winble.moray.AbstractTransition;
+import org.winble.moray.transition.AbstractTransition;
 
 /**
  * @author bowenzhang

@@ -1,4 +1,4 @@
-package org.winble.moray;
+package org.winble.moray.domain;
 
 /**
  * @author bowenzhang

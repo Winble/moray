@@ -1,4 +1,4 @@
-package org.winble.moray;
+package org.winble.moray.domain;
 
 /**
  * @author bowenzhang
@@ -8,5 +8,5 @@ public interface ITransition<C, S extends IState, E extends IEvent> {
     S from();
     S to();
     E on();
-    void action(IStateMachine<C, S, E> stateMachine, E event);
+    void action(IStateMachine<C, S, E, ?> stateMachine, E event);
 }

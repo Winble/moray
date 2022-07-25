@@ -1,6 +1,6 @@
 package org.winble.moray.foo;
 
-import org.winble.moray.IState;
+import org.winble.moray.domain.IState;
 /**
  * @author bowenzhang
  * Create on 2022/7/20

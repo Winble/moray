@@ -1,4 +1,4 @@
-package org.winble.moray;
+package org.winble.moray.type;
 
 /**
  * @author bowenzhang
@@ -10,6 +10,16 @@ public class StateTransitionException extends RuntimeException {
 
     public StateTransitionException(int code, String message) {
         super(message);
+        this.code = code;
+    }
+
+    public StateTransitionException(int code, String message, Throwable e) {
+        super(message, e);
+        this.code = code;
+    }
+
+    public StateTransitionException(int code, Throwable e) {
+        super(e);
         this.code = code;
     }
 

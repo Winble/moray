@@ -1,4 +1,4 @@
-package org.winble.moray;
+package org.winble.moray.domain;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

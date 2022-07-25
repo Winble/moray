@@ -1,6 +1,8 @@
-package org.winble.moray;
+package org.winble.moray.factory;
 
 import org.unidal.tuple.Pair;
+import org.winble.moray.type.StateTransitionException;
+import org.winble.moray.domain.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,14 +11,14 @@ import java.util.Map;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public abstract class AbstractStateMachineFactory<C, S extends IState, E extends IEvent, M extends IStateMachine<C, S, E>> implements IStateMachineFactory<C, S, E, M> {
+public abstract class AbstractStateMachineFactory<C, S extends IState, E extends IEvent, M extends IStateMachine<C, S, E, ?>> implements IStateMachineFactory<C, S, E, M> {
 
     Map<String, M> registry = new HashMap<>();
 
     Map<Pair<S, String>, ITransition<C, S, E>> transactions = new HashMap<>();
 
     @Override
-    public void launch(ITransition<C, S, E> transition) {
+    public void load(ITransition<C, S, E> transition) {
         transactions.put(Pair.from(transition.from(), transition.on().name()), transition);
     }
 

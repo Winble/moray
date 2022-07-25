@@ -1,4 +1,6 @@
-package org.winble.moray;
+package org.winble.moray.type;
+
+import org.winble.moray.domain.IState;
 
 /**
  * @author bowenzhang

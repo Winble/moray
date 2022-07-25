@@ -1,6 +1,6 @@
 package org.winble.moray.foo;
 
-import org.winble.moray.IEvent;
+import org.winble.moray.domain.IEvent;
 
 /**
  * @author bowenzhang
