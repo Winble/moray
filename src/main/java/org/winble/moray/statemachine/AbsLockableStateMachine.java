@@ -17,16 +17,16 @@ import java.util.function.Supplier;
  *
  * @author bowenzhang
  */
-public abstract class AbsLockableStateMachine<C, S extends IState, E extends IEvent, R extends IResult> extends AbsStateMachine<C, S, E, R> {
+public abstract class AbsLockableStateMachine<C, S extends IState, R extends IResult> extends AbsStateMachine<C, S, R> {
 
     private final Lock lock;
 
-    public AbsLockableStateMachine(C context, S state, IStateMachineFactory<C, S, E, R> factory) {
+    public AbsLockableStateMachine(C context, S state, IStateMachineFactory<C, S, R> factory) {
         super(context, state, factory);
         this.lock = this.initLock();
     }
 
-    public AbsLockableStateMachine(C context, S state, IStateMachineFactory<C, S, E, R> factory, Supplier<Function<Exception, R>> errorHandler) {
+    public AbsLockableStateMachine(C context, S state, IStateMachineFactory<C, S, R> factory, Supplier<Function<Exception, R>> errorHandler) {
         super(context, state, factory, errorHandler);
         this.lock = this.initLock();
     }
@@ -36,7 +36,7 @@ public abstract class AbsLockableStateMachine<C, S extends IState, E extends IEv
     }
 
     @Override
-    public R fire(E event) {
+    public R fire(IEvent event) {
         try {
             if (lock.tryLock(1, TimeUnit.SECONDS)) {
                 return super.fire(event);

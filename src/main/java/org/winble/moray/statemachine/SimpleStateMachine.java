@@ -10,19 +10,19 @@ import java.util.function.Supplier;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public class SimpleStateMachine<C, S extends IState, E extends IEvent> extends AbsStateMachine<C, S, E, BaseResult> {
+public class SimpleStateMachine<C, S extends IState> extends AbsStateMachine<C, S, BaseResult> {
 
 
-    public SimpleStateMachine(C context, S state, IStateMachineFactory<C, S, E, BaseResult> factory) {
+    public SimpleStateMachine(C context, S state, IStateMachineFactory<C, S, BaseResult> factory) {
         super(context, state, factory);
     }
 
-    public SimpleStateMachine(C context, S state, IStateMachineFactory<C, S, E, BaseResult> factory, Supplier<Function<Exception, BaseResult>> errorHandler) {
+    public SimpleStateMachine(C context, S state, IStateMachineFactory<C, S, BaseResult> factory, Supplier<Function<Exception, BaseResult>> errorHandler) {
         super(context, state, factory, errorHandler);
     }
 
     @Override
-    public BaseResult onSuccess(E event) {
+    public BaseResult onSuccess() {
         return BaseResult.success();
     }
 

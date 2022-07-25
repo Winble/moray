@@ -9,7 +9,7 @@ import java.util.function.Supplier;
  * @author bowenzhang
  * Create on 2022/7/25
  */
-public abstract class AbsStateMachine<C, S extends IState, E extends IEvent, R extends IResult> implements IStateMachine<C, S, E, R> {
+public abstract class AbsStateMachine<C, S extends IState, R extends IResult> implements IStateMachine<C, S, R> {
 
     protected volatile S state;
 
@@ -17,16 +17,16 @@ public abstract class AbsStateMachine<C, S extends IState, E extends IEvent, R e
 
     protected final Supplier<Function<Exception, R>> errorHandler;
 
-    protected final IStateMachineFactory<C, S, E, R> factory;
+    protected final IStateMachineFactory<C, S, R> factory;
 
-    public AbsStateMachine(C context, S state, IStateMachineFactory<C, S, E, R> factory) {
+    public AbsStateMachine(C context, S state, IStateMachineFactory<C, S, R> factory) {
         this.context = context;
         this.state = state;
         this.factory  = factory;
         this.errorHandler = () -> this::onError;
     }
 
-    public AbsStateMachine(C context, S state, IStateMachineFactory<C, S, E, R> factory, Supplier<Function<Exception, R>> errorHandler) {
+    public AbsStateMachine(C context, S state, IStateMachineFactory<C, S, R> factory, Supplier<Function<Exception, R>> errorHandler) {
         this.context = context;
         this.state = state;
         this.factory = factory;
@@ -34,16 +34,16 @@ public abstract class AbsStateMachine<C, S extends IState, E extends IEvent, R e
     }
 
     @Override
-    public R fire(E event) {
+    public R fire(IEvent event) {
         try {
             factory.matchTransition(this.getState(), event).action(this, event);
-            return this.onSuccess(event);
+            return this.onSuccess();
         } catch (Exception e) {
             return errorHandler.get().apply(e);
         }
     }
 
-    public abstract R onSuccess(E event);
+    public abstract R onSuccess();
 
     public abstract R onError(Exception e);
 

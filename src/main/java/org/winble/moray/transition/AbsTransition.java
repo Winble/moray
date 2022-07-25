@@ -41,7 +41,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
     }
 
     @Override
-    public void action(IStateMachine<C, S, E, ?> stateMachine, E event) {
+    public void action(IStateMachine<C, S, ?> stateMachine, E event) {
         if (!this.preCondition(stateMachine, event)) {
             return;
         }
@@ -55,7 +55,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
         }
     }
 
-    protected boolean preCondition(IStateMachine<C, S, E, ?> stateMachine, E event) {
+    protected boolean preCondition(IStateMachine<C, S, ?> stateMachine, E event) {
         if (!this.from.equals(stateMachine.getState())) {
             throw ReservedErrorResults.UNMATCHED_TRANSITION_FROM.exception();
         }
@@ -65,7 +65,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
         return true;
     }
 
-    protected AutoCloseable tryAction(IStateMachine<C, S, E, ?> stateMachine, E event) throws Exception {
+    protected AutoCloseable tryAction(IStateMachine<C, S, ?> stateMachine, E event) throws Exception {
         return () -> {};
     }
 

@@ -12,7 +12,7 @@ import java.text.MessageFormat;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public class FooStateMachineFactory extends AbsStateMachineFactory<Integer, FooState, FooEvent, BaseResult> {
+public class FooStateMachineFactory extends AbsStateMachineFactory<Integer, FooState, BaseResult> {
 
     public static void main(String[] args) {
         try {
@@ -24,7 +24,7 @@ public class FooStateMachineFactory extends AbsStateMachineFactory<Integer, FooS
                     return context + 1;
                 }
             });
-            IStateMachine<Integer, FooState, FooEvent, BaseResult> stateMachine = fooStateMachineFactory.get("1");
+            IStateMachine<Integer, FooState, BaseResult> stateMachine = fooStateMachineFactory.get("1");
             System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
             stateMachine.fire(FooEvent.a_to_b);
             System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
@@ -36,7 +36,7 @@ public class FooStateMachineFactory extends AbsStateMachineFactory<Integer, FooS
     }
 
     @Override
-    protected SimpleStateMachine<Integer, FooState, FooEvent> buildStateMachine(String id) {
+    protected SimpleStateMachine<Integer, FooState> buildStateMachine(String id) {
         return new SimpleStateMachine<>(0, FooState.a, this);
     }
 }

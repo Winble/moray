@@ -8,5 +8,5 @@ public interface ITransition<C, S extends IState, E extends IEvent> {
     S from();
     S to();
     E on();
-    void action(IStateMachine<C, S, E, ?> stateMachine, E event);
+    void action(IStateMachine<C, S, ?> stateMachine, E event);
 }

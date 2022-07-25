@@ -7,21 +7,21 @@ import java.util.List;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public interface IStateMachineFactory<C, S extends IState, E extends IEvent, R extends IResult> {
+public interface IStateMachineFactory<C, S extends IState, R extends IResult> {
 
-    void load(ITransition<C, S, E> transition);
+    void load(ITransition<C, S, ? extends IEvent> transition);
 
-    default void load(Collection<ITransition<C, S, E>> transitions) {
+    default void load(Collection<ITransition<C, S, ? extends IEvent>> transitions) {
         transitions.forEach(this::load);
     }
 
-    default void load(ITransition<C, S, E>[] transitions) {
-        for (ITransition<C, S, E> transition : transitions) {
+    default void load(ITransition<C, S, ? extends IEvent>[] transitions) {
+        for (ITransition<C, S, ? extends IEvent> transition : transitions) {
             this.load(transition);
         }
     }
 
-    IStateMachine<C, S, E, R> get(String id);
+    IStateMachine<C, S, R> get(String id);
 
-    ITransition<C, S, E> matchTransition(IState from, IEvent event);
+    <E extends IEvent> ITransition<C, S, E> matchTransition(IState from, E event);
 }

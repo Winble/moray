@@ -4,7 +4,7 @@ package org.winble.moray.domain;
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public interface IStateMachine<C, S extends IState, E extends IEvent, R extends IResult> {
+public interface IStateMachine<C, S extends IState, R extends IResult> {
 
     /**
      * Accept and handle state change event
@@ -12,7 +12,7 @@ public interface IStateMachine<C, S extends IState, E extends IEvent, R extends 
      * @param event received event
      * @return result
      */
-    R fire(E event);
+    R fire(IEvent event);
 
     C getContext();
 
