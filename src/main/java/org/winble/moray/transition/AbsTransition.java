@@ -1,5 +1,6 @@
 package org.winble.moray.transition;
 
+import org.winble.moray.type.ReservedErrorResults;
 import org.winble.moray.type.StateTransitionException;
 import org.winble.moray.domain.IEvent;
 import org.winble.moray.domain.IState;
@@ -50,16 +51,16 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
         } catch (StateTransitionException e) {
             throw e;
         } catch (Exception e) {
-            throw new StateTransitionException(510, e);
+            throw ReservedErrorResults.UNKNOWN_ERROR.exception(e);
         }
     }
 
     protected boolean preCondition(IStateMachine<C, S, E, ?> stateMachine, E event) {
         if (!this.from.equals(stateMachine.getState())) {
-            throw new StateTransitionException(500, "illegal transition");
+            throw ReservedErrorResults.UNMATCHED_TRANSITION_FROM.exception();
         }
         if (!this.on.name().equals(event.name())) {
-            throw new StateTransitionException(501, "invalid event type");
+            throw ReservedErrorResults.UNMATCHED_EVENT_TYPE.exception();
         }
         return true;
     }

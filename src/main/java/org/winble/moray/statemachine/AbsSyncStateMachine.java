@@ -22,7 +22,9 @@ public abstract class AbsSyncStateMachine<C, S extends IState, E extends IEvent,
     }
 
     @Override
-    public synchronized R fire(E event) {
-        return super.fire(event);
+    public R fire(E event) {
+        synchronized (this) {
+            return super.fire(event);
+        }
     }
 }
