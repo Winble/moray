@@ -20,7 +20,7 @@ public abstract class AbsStateMachineFactory<C, S extends IState, R extends IRes
 
     @Override
     public void load(ITransition<C, S, ? extends IEvent> transition) {
-        transactions.put(Triple.of(transition.from(), transition.on().name(), transition.on().getClass()), transition);
+        transactions.put(Triple.of(transition.from(), transition.on().getLeft(), transition.on().getRight()), transition);
     }
 
     @Override

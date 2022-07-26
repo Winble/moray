@@ -1,5 +1,6 @@
 package org.winble.moray.transition;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.winble.moray.type.ReservedErrorResults;
 import org.winble.moray.type.StateTransitionException;
 import org.winble.moray.domain.IEvent;
@@ -17,12 +18,18 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
 
     private final S to;
 
-    private final E on;
+    private final Pair<String, Class<? extends IEvent>> on;
+
+    protected AbsTransition(S from, S to, Class<E> on) {
+        this.from = from;
+        this.to = to;
+        this.on = Pair.of(on.getSimpleName(), on);
+    }
 
     protected AbsTransition(S from, S to, E on) {
         this.from = from;
         this.to = to;
-        this.on = on;
+        this.on = Pair.of(on.name(), on.getClass());
     }
 
     @Override
@@ -36,7 +43,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
     }
 
     @Override
-    public E on() {
+    public Pair<String, Class<? extends IEvent>> on() {
         return on;
     }
 
@@ -59,7 +66,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
         if (!this.from.equals(stateMachine.getState())) {
             throw ReservedErrorResults.UNMATCHED_TRANSITION_FROM.exception();
         }
-        if (!this.on.name().equals(event.name())) {
+        if (!this.on.getLeft().equals(event.name())) {
             throw ReservedErrorResults.UNMATCHED_EVENT_TYPE.exception();
         }
         return true;
