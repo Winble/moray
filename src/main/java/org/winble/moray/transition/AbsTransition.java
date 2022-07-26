@@ -50,7 +50,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
     @Override
     public void action(IStateMachine<C, S, ?> stateMachine, E event) {
         if (!this.preCondition(stateMachine, event)) {
-            return;
+            throw ReservedErrorResults.CHECK_PRE_CONDITION_FAIL.exception();
         }
         try (AutoCloseable ignored = tryAction(stateMachine, event)) {
             C context = this.doAction(stateMachine.getContext(), event);

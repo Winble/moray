@@ -9,6 +9,7 @@ public enum ReservedErrorResults {
     UNMATCHED_TRANSITION_FROM(500, "unmatched transition from"),
     UNMATCHED_EVENT_TYPE(501, "unmatched event type"),
     TRY_LOCK_FAIL(502, "try statemachine lock fail"),
+    CHECK_PRE_CONDITION_FAIL(503, "check pre condition fail"),
     UNKNOWN_ERROR(599, "unknown error"),
     ;
 
