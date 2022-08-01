@@ -37,13 +37,13 @@ public abstract class AbsStateMachine<C, S extends IState, R extends IResult> im
     public R fire(IEvent event) {
         try {
             factory.matchTransition(this.getState(), event).action(this, event);
-            return this.onSuccess();
+            return this.onSuccess(event);
         } catch (Exception e) {
             return errorHandler.get().apply(e);
         }
     }
 
-    public abstract R onSuccess();
+    public abstract R onSuccess(IEvent event);
 
     public abstract R onError(Exception e);
 

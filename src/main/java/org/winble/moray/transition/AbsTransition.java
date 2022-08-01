@@ -18,7 +18,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
 
     private final S to;
 
-    private final Pair<String, Class<? extends IEvent>> on;
+    private final Pair<String, Class<E>> on;
 
     protected AbsTransition(S from, S to, Class<E> on) {
         this.from = from;
@@ -26,10 +26,17 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
         this.on = Pair.of(on.getSimpleName(), on);
     }
 
+    @SuppressWarnings("unchecked")
     protected AbsTransition(S from, S to, E on) {
         this.from = from;
         this.to = to;
-        this.on = Pair.of(on.name(), on.getClass());
+        this.on = Pair.of(on.name(), (Class<E>) on.getClass());
+    }
+
+    public AbsTransition(S from, S to, Pair<String, Class<E>> on) {
+        this.from = from;
+        this.to = to;
+        this.on = on;
     }
 
     @Override
@@ -43,7 +50,7 @@ public abstract class AbsTransition<C, S extends IState, E extends IEvent> imple
     }
 
     @Override
-    public Pair<String, Class<? extends IEvent>> on() {
+    public Pair<String, Class<E>> on() {
         return on;
     }
 

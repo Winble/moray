@@ -5,8 +5,10 @@ import org.winble.moray.factory.AbsStateMachineFactory;
 import org.winble.moray.result.BaseResult;
 import org.winble.moray.transition.AbsTransition;
 import org.winble.moray.statemachine.SimpleStateMachine;
+import org.winble.moray.transition.Trans;
 
 import java.text.MessageFormat;
+import java.util.function.BiFunction;
 
 /**
  * @author bowenzhang
@@ -24,11 +26,15 @@ public class FooStateMachineFactory extends AbsStateMachineFactory<Integer, FooS
                     return context + 1;
                 }
             });
+            fooStateMachineFactory.load(Trans.stay(FooState.c).on(FooEvent.c_to_d)
+                    .action(Integer.class, (c, e) -> c + 1).build());
             IStateMachine<Integer, FooState, BaseResult> stateMachine = fooStateMachineFactory.get("1");
             System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
             stateMachine.fire(FooEvent.a_to_b);
             System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
             stateMachine.fire(FooEvent.b_to_c);
+            System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
+            stateMachine.fire(FooEvent.c_to_d);
             System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
         } catch (Exception e) {
             e.printStackTrace();

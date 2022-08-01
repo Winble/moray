@@ -9,6 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 public interface ITransition<C, S extends IState, E extends IEvent> {
     S from();
     S to();
-    Pair<String, Class<? extends IEvent>> on();
+    Pair<String, Class<E>> on();
     void action(IStateMachine<C, S, ?> stateMachine, E event);
 }

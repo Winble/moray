@@ -22,7 +22,7 @@ public class SimpleStateMachine<C, S extends IState> extends AbsStateMachine<C, 
     }
 
     @Override
-    public BaseResult onSuccess() {
+    public BaseResult onSuccess(IEvent event) {
         return BaseResult.success();
     }
 

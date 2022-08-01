@@ -1,9 +1,8 @@
 package org.winble.moray.factory;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.winble.moray.type.StateTransitionException;
 import org.winble.moray.domain.*;
+import org.winble.moray.type.StateTransitionException;
 
 import java.util.HashMap;
 import java.util.Map;
