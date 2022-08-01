@@ -45,6 +45,8 @@ public abstract class AbsLockableStateMachine<C, S extends IState, R extends IRe
             }
         } catch (Exception e) {
             return this.onError(e);
+        } finally {
+            lock.unlock();
         }
     }
 }
