@@ -26,8 +26,7 @@ public class FooStateMachineFactory extends AbsStateMachineFactory<Integer, FooS
                     return context + 1;
                 }
             });
-            fooStateMachineFactory.load(Trans.stay(FooState.c).on(FooEvent.c_to_d)
-                    .action(Integer.class, (c, e) -> c + 1).build());
+            Trans.stay(FooState.c).on(FooEvent.c_to_d).action(Integer.class, (c, e) -> c + 1).upload(fooStateMachineFactory);
             IStateMachine<Integer, FooState, BaseResult> stateMachine = fooStateMachineFactory.get("1");
             System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
             stateMachine.fire(FooEvent.a_to_b);

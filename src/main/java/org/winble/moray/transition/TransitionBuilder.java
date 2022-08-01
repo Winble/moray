@@ -1,10 +1,7 @@
 package org.winble.moray.transition;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.winble.moray.domain.IEvent;
-import org.winble.moray.domain.IState;
-import org.winble.moray.domain.IStateMachine;
-import org.winble.moray.domain.ITransition;
+import org.winble.moray.domain.*;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -95,6 +92,10 @@ public class TransitionBuilder {
                     return action.apply(context, event);
                 }
             };
+        }
+
+        public void upload(IStateMachineFactory<C, S, ?> factory) {
+            factory.load(build());
         }
     }
 }
