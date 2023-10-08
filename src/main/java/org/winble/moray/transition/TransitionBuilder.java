@@ -1,10 +1,15 @@
 package org.winble.moray.transition;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.winble.moray.domain.*;
+import org.winble.moray.transition.template.AbsTransition;
+import org.winble.moray.transition.template.ConsumerTransition;
+import org.winble.moray.type.BaseResult;
+import org.winble.moray.type.ContextResult;
 
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * Create on 2022/8/1
@@ -13,89 +18,72 @@ import java.util.function.BiFunction;
  */
 public class TransitionBuilder {
 
-    protected TransitionBuilder() {
-    }
+    public static class When<E extends Event> {
 
-    public static class From<S extends IState> {
-        protected final S from;
+        protected final E when;
 
-        protected From(S from) {
-            this.from = from;
+        protected When(E when) {
+            this.when = when;
         }
 
-        public To<S> to(S to) {
-            return new To<>(from, to);
+        public <S> From<E, S> from(S... froms) {
+            return new From<>(when, froms);
+        }
+
+        @SuppressWarnings("unchecked")
+        public <S> To<E, S> stay(S stay) {
+            return new To<>(when, (S[]) new Object[]{stay}, stay);
         }
     }
 
-    public static class To<S extends IState> extends From<S> {
+    public static class From<E extends Event, S> {
+
+        protected final E when;
+        protected final S[] froms;
+
+        protected From(E when, S... froms) {
+            this.when = when;
+            this.froms = froms;
+        }
+
+        public To<E, S> to(S to) {
+            return new To<>(when, froms, to);
+        }
+    }
+
+    public static class To<E extends Event, S> {
+        protected final E when;
+        protected final S[] froms;
         protected final S to;
 
-        protected To(S from, S to) {
-            super(from);
+        protected To(E when, S[] froms, S to) {
+            this.when = when;
+            this.froms = froms;
             this.to = to;
         }
 
         @SuppressWarnings("unchecked")
-        public <E extends IEvent> On<S, E> on(E on) {
-            return new On<>(from, to, on.name(), (Class<E>) on.getClass());
+        public <C> Transition<? extends Event, S, C>[] action(BiConsumer<E, C> consumer) {
+            return Arrays.stream(froms).map(from -> new ConsumerTransition<>(when, from, to, consumer))
+                    .collect(Collectors.toList()).toArray((Transition<? extends Event, S, C>[]) new Transition<?, ?, ?>[0]);
         }
 
-        public <E extends IEvent> On<S, E> on(Class<E> on) {
-            return new On<>(from, to, on.getSimpleName(), on);
-        }
-    }
-
-    public static class Stay<S extends IState> extends To<S> {
-
-        protected Stay(S stay) {
-            super(stay, stay);
-        }
-    }
-
-    public static class On<S extends IState, E extends IEvent> extends To<S> {
-
-        protected final Pair<String, Class<E>> on;
-
-        protected On(S from, S to, String onName, Class<E> onClazz) {
-            super(from, to);
-            this.on = Pair.of(onName, onClazz);
-        }
-
-        public On(S from, S to, Pair<String, Class<E>> on) {
-            super(from, to);
-            this.on = on;
-        }
-
-        public <C> Action<E, S, C> action(Class<C> clazz, BiFunction<C, E, C> action) {
-            return new Action<>(from, to, on, action);
-        }
-
-        public <C> Action<E, S, C> action(BiFunction<C, E, C> action) {
-            return new Action<>(from, to, on, action);
-        }
-    }
-
-    public static class Action<E extends IEvent, S extends IState, C> extends On<S, E> {
-
-        protected final BiFunction<C, E, C> action;
-
-        protected Action(S from, S to, Pair<String, Class<E>> on, BiFunction<C, E, C> action) {
-            super(from, to, on);
-            this.action = action;
-        }
-
-        public ITransition<C, S, E> build() {
-            return new AbsTransition<C, S, E>(from, to, on) {
-                @Override
-                protected C doAction(C context, E event) {
-                    return action.apply(context, event);
-                }
-            };
-        }
-
-        public void upload(IStateMachineFactory<C, S, ?> factory) {
-            factory.load(build());
+        @SuppressWarnings("unchecked")
+        public <C> Transition<? extends Event, S, C>[] action(BiFunction<E, C, ?> action) {
+            return Arrays.stream(froms).map(from -> new AbsTransition<E, S, C>(when, from, to) {
+                        @Override
+                        public Result action(E event, C context) {
+                            Object result = action.apply(event, context);
+                            if (result instanceof Result) {
+                                return (Result) result;
+                            }
+                            if (context.getClass().isInstance(result)) {
+                                return ContextResult.of(result);
+                            }
+                            return BaseResult.success();
+                        }
+                    })
+                    .collect(Collectors.toList()).toArray((Transition<? extends Event, S, C>[]) new Transition<?, ?, ?>[0]);
         }
     }
 }

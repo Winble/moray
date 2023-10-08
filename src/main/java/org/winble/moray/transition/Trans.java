@@ -1,6 +1,6 @@
 package org.winble.moray.transition;
 
-import org.winble.moray.domain.IState;
+import org.winble.moray.domain.Event;
 
 /**
  * Create on 2022/8/1
@@ -8,12 +8,7 @@ import org.winble.moray.domain.IState;
  * @author bowenzhang
  */
 public class Trans {
-
-    public static <S extends IState> TransitionBuilder.From<S> from(S from) {
-        return new TransitionBuilder.From<>(from);
-    }
-
-    public static <S extends IState> TransitionBuilder.Stay<S> stay(S stay) {
-        return new TransitionBuilder.Stay<>(stay);
+    public static <E extends Event> TransitionBuilder.When<E> when(E event) {
+        return new TransitionBuilder.When<>(event);
     }
 }

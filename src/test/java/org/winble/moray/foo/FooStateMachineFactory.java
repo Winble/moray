@@ -1,47 +1,42 @@
 package org.winble.moray.foo;
 
-import org.winble.moray.domain.IStateMachine;
-import org.winble.moray.factory.AbsStateMachineFactory;
-import org.winble.moray.result.BaseResult;
-import org.winble.moray.transition.AbsTransition;
-import org.winble.moray.statemachine.SimpleStateMachine;
+import org.winble.moray.domain.*;
+import org.winble.moray.statemachine.template.AbsStateMachine;
+import org.winble.moray.statemachine.template.AbsStateMachineFactory;
 import org.winble.moray.transition.Trans;
 
 import java.text.MessageFormat;
-import java.util.function.BiFunction;
 
 /**
  * @author bowenzhang
- * Create on 2022/7/20
+ * Create on 2023/10/8
  */
-public class FooStateMachineFactory extends AbsStateMachineFactory<Integer, FooState, BaseResult> {
+public class FooStateMachineFactory extends AbsStateMachineFactory<FooState, Integer, Integer> {
 
-    public static void main(String[] args) {
-        try {
-            FooStateMachineFactory fooStateMachineFactory = new FooStateMachineFactory();
-            fooStateMachineFactory.load(new FooTransactionAToB());
-            fooStateMachineFactory.load(new AbsTransition<Integer, FooState, FooEvent>(FooState.b, FooState.c, FooEvent.b_to_c) {
-                @Override
-                protected Integer doAction(Integer context, FooEvent event) {
-                    return context + 1;
-                }
-            });
-            Trans.stay(FooState.c).on(FooEvent.c_to_d).action(Integer.class, (c, e) -> c + 1).upload(fooStateMachineFactory);
-            IStateMachine<Integer, FooState, BaseResult> stateMachine = fooStateMachineFactory.get("1");
-            System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
-            stateMachine.fire(FooEvent.a_to_b);
-            System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
-            stateMachine.fire(FooEvent.b_to_c);
-            System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
-            stateMachine.fire(FooEvent.c_to_d);
-            System.out.println(MessageFormat.format("state={0}, context={1}", stateMachine.getState(), stateMachine.getContext()));
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    public StateMachine<FooState, Integer> get(Integer id) {
+        return new DelegateStateMachine(FooState.a, id);
+    }
+
+    public class DelegateStateMachine extends AbsStateMachine<FooState, Integer> {
+        public DelegateStateMachine(FooState state, Integer context) {
+            super(state, context);
+        }
+
+        @Override
+        public Transition<Event, FooState, Integer> matchTransition(FooState from, Event event) {
+            return FooStateMachineFactory.this.matchTransition(from, event);
         }
     }
 
-    @Override
-    protected SimpleStateMachine<Integer, FooState> buildStateMachine(String id) {
-        return new SimpleStateMachine<>(0, FooState.a, this);
+    public static void main(String[] args) {
+        FooStateMachineFactory factory = new FooStateMachineFactory();
+        factory.load(Trans.when(FooEvent.a_to_b).from(FooState.a).to(FooState.b).action((e, c) -> c + 1));
+        StateMachine<FooState, Integer> stateMachine = factory.get(1);
+        Result result;
+        result = stateMachine.fire(FooEvent.a_to_b);
+        System.out.println(MessageFormat.format("result={0}, state={1}, context={2}", result.getMessage(), stateMachine.getState(), stateMachine.getContext()));
+        result = stateMachine.fire(FooEvent.a_to_b);
+        System.out.println(MessageFormat.format("result={0}, state={1}, context={2}", result.getMessage(), stateMachine.getState(), stateMachine.getContext()));
     }
 }

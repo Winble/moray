@@ -1,19 +1,21 @@
 package org.winble.moray.foo;
 
-import org.winble.moray.transition.AbsTransition;
+import org.winble.moray.domain.Result;
+import org.winble.moray.transition.template.AbsTransition;
+import org.winble.moray.type.ContextResult;
 
 /**
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public class FooTransactionAToB extends AbsTransition<Integer, FooState, FooEvent> {
+public class FooTransactionAToB extends AbsTransition<FooEvent, FooState, Integer> {
 
     protected FooTransactionAToB() {
-        super(FooState.a, FooState.b, FooEvent.a_to_b);
+        super(FooEvent.a_to_b, FooState.a, FooState.b);
     }
 
     @Override
-    protected Integer doAction(Integer context, FooEvent event) {
-        return context + 1;
+    public Result action(FooEvent event, Integer context) {
+        return ContextResult.of(context + 1);
     }
 }

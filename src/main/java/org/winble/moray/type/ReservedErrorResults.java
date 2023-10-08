@@ -7,9 +7,12 @@ package org.winble.moray.type;
  */
 public enum ReservedErrorResults {
     UNMATCHED_TRANSITION_FROM(500, "unmatched transition from"),
-    UNMATCHED_EVENT_TYPE(501, "unmatched event type"),
-    TRY_LOCK_FAIL(502, "try statemachine lock fail"),
-    CHECK_PRE_CONDITION_FAIL(503, "check pre condition fail"),
+    UNMATCHED_STATE(501, "unmatched state"),
+    UNMATCHED_EVENT_TYPE(502, "unmatched event type"),
+    TRY_LOCK_FAIL(503, "try statemachine lock fail"),
+    CHECK_PRE_CONDITION_FAIL(504, "check pre condition fail"),
+    CONTEXT_NOT_EXIST(506, "context not exist"),
+    CONTEXT_TYPE_MISMATCH(507, "context type mismatch"),
     UNKNOWN_ERROR(599, "unknown error"),
     ;
 
@@ -24,6 +27,10 @@ public enum ReservedErrorResults {
 
     public StateTransitionException exception() {
         return new StateTransitionException(code, message);
+    }
+
+    public BaseResult result() {
+        return BaseResult.failure(code, message);
     }
 
     public StateTransitionException exception(Exception e) {

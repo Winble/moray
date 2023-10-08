@@ -1,13 +1,12 @@
-package org.winble.moray.result;
+package org.winble.moray.type;
 
-import org.winble.moray.type.StateTransitionException;
-import org.winble.moray.domain.IResult;
+import org.winble.moray.domain.Result;
 
 /**
  * @author bowenzhang
  * Create on 2022/7/20
  */
-public class BaseResult implements IResult {
+public class BaseResult implements Result {
 
     private boolean success;
 
@@ -22,7 +21,7 @@ public class BaseResult implements IResult {
     }
 
     public static BaseResult success() {
-        return new BaseResult(true, 0, "");
+        return new BaseResult(true, 0, "success");
     }
 
     public static BaseResult failure(int code, String message) {
